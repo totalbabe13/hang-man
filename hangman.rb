@@ -27,6 +27,7 @@
  game_board = []
  guesses = 0
  letters_guessed = []
+ random_words = []
  
 # - - - - - - - - - - - - - - - - -
 #BEHAVIOR AND METHODS
@@ -53,10 +54,8 @@ end
 # - - - - - - - - - - - - - - - - -
 #RUNNER SCRIPT
 
-# load_dictionary(list_of_words,dictionary)
-# pick_a_word(dictionary)
-# TODO STILL:
-# downcase the secret word
+ load_dictionary(list_of_words,dictionary)
+ random_words << pick_a_word(dictionary)
 
 #greet player
  system "clear"
@@ -75,12 +74,12 @@ end
 #initiate game
  response = gets.chomp
  if response == 'y'
-   test_word = 'Bananas'
-   test_word_array = test_word.split('')
+   guess_word = random_words[0]
+   test_word_array = guess_word.split('')
    down_cased = test_word_array.map {|letter| letter.downcase} 
    
    #make gameboard
-   game_board << make_guessing_board(test_word)
+   game_board << make_guessing_board(guess_word)
    secret_word = game_board.flatten
 
 
@@ -100,34 +99,39 @@ end
    puts ''
    puts ''
    puts ''
-   
+   message = ''
    while secret_word != down_cased
    	 guess = gets.chomp
    	 if letters_guessed.include?(guess)
-   	   message = " THERS IS AN #{guess.upcase}'" 
-       puts '         you\'ve guessed that already'
+       puts '         YOU\'VE GUESSED THAT LETTER ALREADY--> TRY AGAIN:'
        guess = gets.chomp
      end  
-       if !letters_guessed.include?(guess)   
+       if !letters_guessed.include?(guess)
          counter = 0 
          while counter < down_cased.length
            if down_cased[counter] == guess
-             secret_word[counter] = guess    
+             secret_word[counter] = guess
            end 
            counter += 1 
          end
        end  
      letters_guessed << guess
-     guesses += 1 
-     puts ' - - - - -'
+     guesses += 1
+
      system "clear"
+       if secret_word.include?(guess)
+     	  message = "THERS IS AN -> #{guess.upcase} IN THIS WORD!"
+       else
+     	  message = "THERE IS NO ->#{guess.upcase} IN THIS WORD, TRY ANOTHER LETTER."
+       end	
+       	
      puts ''
      puts ''
      puts ''
      puts ''
      puts ''
-     puts ''
-     puts "           YOU GUESSED THE LETTER #{guess}"
+     puts "           YOU GUESSED THE LETTER --> #{guess.upcase} "
+     puts "           #{message}"
      puts ''
      puts ''
      puts "           YOUR WORD: #{secret_word}"
