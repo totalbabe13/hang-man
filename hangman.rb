@@ -18,43 +18,70 @@
 #  which should jump you exactly back to where you were when you saved. Play on!
 
 
-# - - - - - - - - - - - - - - - - -
-#OBJECTS AND FILES AND CLASSES
-
- list_of_words = "wordlist.txt"
-
- dictionary = []
- game_board = []
- guesses = 0
- letters_guessed = []
- random_words = []
- 
-# - - - - - - - - - - - - - - - - -
+#   - - - - - - - - - - - - - - - - -
+# # - - - - - - - - - - - - - - - - -
 #BEHAVIOR AND METHODS
 
-def load_dictionary(word_file,dictionary)
- File.readlines(word_file).each do |line|
-  dictionary << line
- end
- dictionary.keep_if { |word| word.length < 12 && word.length >5 }
-end 
+module Game_functions
 
-def pick_a_word(words)
-  random_number = rand(0...43786)
-  selected_word = words[random_number]
-  selected_word
-end	
+  def load_dictionary(word_file,dictionary)
+   File.readlines(word_file).each do |line|
+   dictionary << line
+   end
+   dictionary.keep_if { |word| word.length < 12 && word.length >5 }
+  end 
 
-def make_guessing_board(word)
-word_array = word.split('')
-masked_word = []
-word_array.length.times { masked_word << "_"}
-masked_word
+  def pick_a_word(words)
+    random_number = rand(0...43786)
+    selected_word = words[random_number]
+    selected_word
+  end	
+
+  def make_guessing_board(word)
+    word_array = word.split('')
+    masked_word = []
+    word_array.length.times { masked_word << "_"}
+    masked_word
+  end
+
 end
 # - - - - - - - - - - - - - - - - -
-#RUNNER SCRIPT
+#OBJECTS AND FILES AND CLASSES
+ list_of_words = "wordlist.txt"
 
+ class Hangman
+  include Game_functions
+  attr_accessor :game_board, :guesses, :letters_guessed, :random_words
+
+  def initialize
+    @game_board = []
+    @guesses = 0
+    @letters_guessed = []
+    @random_words = []
+  end  
+
+ end #end of class HANGMAN 
+
+  dictionary = []
+ # game_board = []
+ # guesses = 0
+ # letters_guessed = []
+ # random_words = []
+
+# - - - - - - - - - - - - - - - - -
+
+ list_of_words = "wordlist.txt"
+# - - - - - - - - - - - - - - - - -
+# - - - - - - - - - - - - - - - - -
+#RUNNER SCRIPT
+ include Game_functions
+ 
+
+
+ #Load list of words
  load_dictionary(list_of_words,dictionary)
+
+ #create Instance of game
  random_words << pick_a_word(dictionary)
 
 #greet player
@@ -74,9 +101,9 @@ end
 #initiate game
  response = gets.chomp
  if response == 'y'
-   guess_word = random_words[0]
-   test_word_array = guess_word.split('')
-   down_cased = test_word_array.map {|letter| letter.downcase} 
+   guess_word = random_words[0].chomp
+   guess_word_array = guess_word.split('')
+   down_cased = guess_word_array.map {|letter| letter.downcase} 
    
    #make gameboard
    game_board << make_guessing_board(guess_word)
@@ -135,7 +162,7 @@ end
      puts ''
      puts ''
      puts "           YOUR WORD: #{secret_word}"
-     puts ''
+     puts ""
      puts "           NUMBER OF GUESSES: #{guesses}"
      puts ''
      puts "           LETTERS GUESSED SO FAR: #{letters_guessed}"
