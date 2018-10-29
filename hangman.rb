@@ -79,10 +79,10 @@ end
 
 
  #Load list of words
- load_dictionary(list_of_words,dictionary)
+ # load_dictionary(list_of_words,dictionary)
 
  #create Instance of game
- random_words << pick_a_word(dictionary)
+ # random_words << pick_a_word(dictionary)
 
 #greet player
  system "clear"
@@ -96,18 +96,21 @@ end
  puts ''
  puts ''
  puts ''
- puts 'Would you like to play?  (y/n):'
+ puts 'Would you like to play HANGMAN?  (y/n):'
 
 #initiate game
  response = gets.chomp
  if response == 'y'
-   guess_word = random_words[0].chomp
+   new_game = Hangman.new
+   load_dictionary(list_of_words,dictionary)
+   new_game.random_words << pick_a_word(dictionary)
+
+   guess_word = new_game.random_words[0].chomp
    guess_word_array = guess_word.split('')
    down_cased = guess_word_array.map {|letter| letter.downcase} 
-   
    #make gameboard
-   game_board << make_guessing_board(guess_word)
-   secret_word = game_board.flatten
+   new_game.game_board << make_guessing_board(guess_word)
+   secret_word = new_game.game_board.flatten
 
 
    system "clear"
@@ -129,11 +132,11 @@ end
    message = ''
    while secret_word != down_cased
    	 guess = gets.chomp
-   	 if letters_guessed.include?(guess)
+   	 if new_game.letters_guessed.include?(guess)
        puts '         YOU\'VE GUESSED THAT LETTER ALREADY--> TRY AGAIN:'
        guess = gets.chomp
      end  
-       if !letters_guessed.include?(guess)
+       if !new_game.letters_guessed.include?(guess)
          counter = 0 
          while counter < down_cased.length
            if down_cased[counter] == guess
@@ -142,8 +145,8 @@ end
            counter += 1 
          end
        end  
-     letters_guessed << guess
-     guesses += 1
+     new_game.letters_guessed << guess
+     new_game.guesses += 1
 
      system "clear"
        if secret_word.include?(guess)
@@ -163,9 +166,9 @@ end
      puts ''
      puts "           YOUR WORD: #{secret_word}"
      puts ""
-     puts "           NUMBER OF GUESSES: #{guesses}"
+     puts "           NUMBER OF GUESSES: #{new_game.guesses}"
      puts ''
-     puts "           LETTERS GUESSED SO FAR: #{letters_guessed}"
+     puts "           LETTERS GUESSED SO FAR: #{new_game.letters_guessed}"
      puts ''
      puts ''
      puts ''
@@ -174,7 +177,7 @@ end
      # p letters_guessed 
     end 
     answer = secret_word.join.upcase
-    puts "           YOU GUESSED IT in #{guesses} guesses! The secret word was #{answer}"
+    puts "           YOU GUESSED IT in #{new_game.guesses} guesses! The secret word was #{answer}"
     puts 
    # - - - - - - - - - -
  else
