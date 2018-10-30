@@ -44,6 +44,90 @@ module Game_functions
     masked_word
   end
 
+  def greet_player
+    system "clear"
+    puts ''
+    puts ''
+    puts ''
+    puts ''
+    puts 'WELCOME to H_A_N_G_M_A_N'
+    puts '------- -- -------------'
+    puts ''
+    puts ''
+    puts ''
+    puts ''
+    puts 'Would you like to play HANGMAN?  (y/n):'
+  end
+
+  def save_or_load
+    system "clear"
+    puts ''
+    puts ''
+    puts ''
+    puts ''
+    puts ' DO YOU WANT TO:'
+    puts ' PRESS:(1) --> START NEW GAME'
+    puts ' OR'
+    puts ' PRESS:(2) --> LOAD A SAVED GAME?'
+    puts ''
+    puts ''
+    puts ''
+  end 
+
+  def get_user_name
+    system "clear"
+    puts ''
+    puts ''
+    puts ''
+    puts ''
+    puts ''
+    puts ''
+    puts '            PLEASE ENTER YOUR NAME AND PRESS ENTER:'
+    puts ''
+    puts ''
+    puts ''
+    puts ''
+  end
+
+  def select_a_letter
+      system "clear"
+      puts ''
+      puts ''
+      puts ''
+      puts ''
+      puts '          A word had been selcted for you to guess:'
+      puts ''
+      puts ''
+      puts ''
+      puts ''
+      puts ''
+      puts "         TYPE A LETTER IN, and THEN PRESS -->ENTER" 
+      puts ''
+      puts '         IF AT ANY TIME YOU WANT TO QUIT:: type in ---> - quit -'
+      puts '         IF YOU WANT TO GUESS THE WORD::   type in ---> - guess -'
+      puts ''
+  end 
+
+  def current_game_status(new_game,guess,message,secret_word)
+      puts ''
+      puts ''
+      puts ''
+      puts ''
+      puts ''
+      puts "           #{new_game.player_name} GUESSED THE LETTER --> #{guess.upcase} "
+      puts "           #{message}"
+      puts ''
+      puts ''
+      puts "           YOUR WORD: #{secret_word}"
+      puts ''
+      puts "           NUMBER OF GUESSES: #{new_game.guesses}"
+      puts ''
+      puts "           LETTERS GUESSED SO FAR: #{new_game.letters_guessed}"
+      puts ''
+      puts ''
+      puts ''
+  end  
+
 end
 # - - - - - - - - - - - - - - - - -
 #OBJECTS AND FILES AND CLASSES
@@ -51,134 +135,99 @@ end
 
  class Hangman
   include Game_functions
-  attr_accessor :game_board, :guesses, :letters_guessed, :random_words
+  attr_accessor :game_board, :guesses, :letters_guessed, :random_words, :player_name
 
-  def initialize
+  def initialize(player_name)
+    @player_name = player_name
     @game_board = []
     @guesses = 0
     @letters_guessed = []
     @random_words = []
   end  
+  
 
  end #end of class HANGMAN 
 
   dictionary = []
- # game_board = []
- # guesses = 0
- # letters_guessed = []
- # random_words = []
-
-# - - - - - - - - - - - - - - - - -
-
- list_of_words = "wordlist.txt"
-# - - - - - - - - - - - - - - - - -
+  list_of_words = "wordlist.txt"
 # - - - - - - - - - - - - - - - - -
 #RUNNER SCRIPT
  include Game_functions
- 
+ greet_player
 
-
- #Load list of words
- # load_dictionary(list_of_words,dictionary)
-
- #create Instance of game
- # random_words << pick_a_word(dictionary)
-
-#greet player
- system "clear"
- puts ''
- puts ''
- puts ''
- puts ''
- puts 'WELCOME to H_A_N_G_M_A_N'
- puts '------- -- -------------'
- puts ''
- puts ''
- puts ''
- puts ''
- puts 'Would you like to play HANGMAN?  (y/n):'
-
-#initiate game
+#SAVE or LOAD game?
  response = gets.chomp
  if response == 'y'
-   new_game = Hangman.new
-   load_dictionary(list_of_words,dictionary)
-   new_game.random_words << pick_a_word(dictionary)
+   save_or_load
+   user_response = gets.chomp
+    
+    if user_response == '1'
+      get_user_name
+      new_player = gets.chomp
+      new_game = Hangman.new(new_player)
+   #Find word from text file/ format it for game play
+      load_dictionary(list_of_words,dictionary)
+      new_game.random_words << pick_a_word(dictionary)
+      guess_word = new_game.random_words[0].chomp
+      guess_word_array = guess_word.split('')
+      down_cased = guess_word_array.map {|letter| letter.downcase} 
+   
+   #make new gameboard attribute
+      new_game.game_board << make_guessing_board(guess_word)
+      secret_word = new_game.game_board.flatten
+      select_a_letter
+      message = '' #info for user Message Toggle 
 
-   guess_word = new_game.random_words[0].chomp
-   guess_word_array = guess_word.split('')
-   down_cased = guess_word_array.map {|letter| letter.downcase} 
-   #make gameboard
-   new_game.game_board << make_guessing_board(guess_word)
-   secret_word = new_game.game_board.flatten
-
-
-   system "clear"
-   puts ''
-   puts ''
-   puts ''
-   puts ''
-   puts '          A word had been selcted for you to guess:'
-   puts ''
-   puts ''
-   puts ''
-   puts ''
-   puts ''
-   puts "         TYPE A LETTER IN, and THEN PRESS -->ENTER" 
-   puts ''
-   puts ''
-   puts ''
-   puts ''
-   message = ''
-   while secret_word != down_cased
-   	 guess = gets.chomp
-   	 if new_game.letters_guessed.include?(guess)
-       puts '         YOU\'VE GUESSED THAT LETTER ALREADY--> TRY AGAIN:'
-       guess = gets.chomp
-     end  
-       if !new_game.letters_guessed.include?(guess)
-         counter = 0 
-         while counter < down_cased.length
-           if down_cased[counter] == guess
+    #game WHILE loop:  
+      while secret_word != down_cased
+   	    guess = gets.chomp
+   	    if new_game.letters_guessed.include?(guess)
+          puts '         YOU\'VE GUESSED THAT LETTER ALREADY--> TRY AGAIN:'
+          guess = gets.chomp
+        end  
+        
+        if !new_game.letters_guessed.include?(guess)
+          counter = 0 
+          while counter < down_cased.length
+            if down_cased[counter] == guess
              secret_word[counter] = guess
-           end 
-           counter += 1 
-         end
-       end  
-     new_game.letters_guessed << guess
-     new_game.guesses += 1
-
-     system "clear"
-       if secret_word.include?(guess)
-     	  message = "THERS IS AN -> #{guess.upcase} IN THIS WORD!"
-       else
-     	  message = "THERE IS NO ->#{guess.upcase} IN THIS WORD, TRY ANOTHER LETTER."
-       end	
-       	
-     puts ''
-     puts ''
-     puts ''
-     puts ''
-     puts ''
-     puts "           YOU GUESSED THE LETTER --> #{guess.upcase} "
-     puts "           #{message}"
-     puts ''
-     puts ''
-     puts "           YOUR WORD: #{secret_word}"
-     puts ""
-     puts "           NUMBER OF GUESSES: #{new_game.guesses}"
-     puts ''
-     puts "           LETTERS GUESSED SO FAR: #{new_game.letters_guessed}"
-     puts ''
-     puts ''
-     puts ''
-     # p secret_word
-     # p guesses
-     # p letters_guessed 
-    end 
+            end 
+            counter += 1 
+          end
+        end  
+      new_game.letters_guessed << guess
+      new_game.guesses += 1
+      system "clear"
+        
+        if secret_word.include?(guess)
+     	    message = "THERS IS AN -> #{guess.upcase} IN THIS WORD!"
+        else
+     	    message = "THERE IS NO ->#{guess.upcase} IN THIS WORD, TRY ANOTHER LETTER."
+        end	
+      current_game_status(new_game,guess,message,secret_word) 	
+      # puts ''
+      # puts ''
+      # puts ''
+      # puts ''
+      # puts ''
+      # puts "           #{new_game.player_name} GUESSED THE LETTER --> #{guess.upcase} "
+      # puts "           #{message}"
+      # puts ''
+      # puts ''
+      # puts "           YOUR WORD: #{secret_word}"
+      # puts ''
+      # puts "           NUMBER OF GUESSES: #{new_game.guesses}"
+      # puts ''
+      # puts "           LETTERS GUESSED SO FAR: #{new_game.letters_guessed}"
+      # puts ''
+      # puts ''
+      # puts ''
+     
+    end #CLOSES WHILE LOOP
     answer = secret_word.join.upcase
     puts "           YOU GUESSED IT in #{new_game.guesses} guesses! The secret word was #{answer}"
     puts 
+  end #closes new game IF statement path of NEW GAME
    # - - - - - - - - - -
  else
    puts 'Okay,maybe next time'  
