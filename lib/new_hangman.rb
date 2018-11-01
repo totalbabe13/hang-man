@@ -35,7 +35,6 @@ module Game_functions
    	letters_guessed: "#{game.letters_guessed}",
    	secret_word: "#{game.secret_word}"
    }
-
  end	
 
  def save_game(game_obj,game_hash)
@@ -102,12 +101,88 @@ include Game_functions
 # thing = YAML.load_file("Leonardo7.yml")
 #  puts thing.inspect
 # p thing[:player_name]
+# test_game = load_saved_game   
+# loaded_game =Hangman.new(test_game[:player_name],test_game[:secret_word])
+# p loaded_game
 
 
-  test_game = load_saved_game 
+#USER EXP :: WALK THROUGH
+
+# - - - - - - - - - - - - - - - - - -
+  ## -->WELCOME TO HANG MAN
+  # --> PLAY? (y/n)
+  system("clear")
+  puts ''
+  puts ''
+  puts "***!! W_E_L_C_O_M_E to H-A-N-G-M-A-N-  !!***"
+  puts "WOULD YOU LIKE TO PLAY? enter --->(y/n)"
+  puts ''
+  puts ''
+
   
-  loaded_game =Hangman.new(test_game[:player_name],test_game[:secret_word])
-  p loaded_game
+  responses_valid = false
+  while  responses_valid == false
+  	user_response = gets.chomp
+
+    if user_response == 'y'
+      responses_valid = true
+      system("clear")
+      puts ''
+      puts ''
+      puts "(1)LOAD SAVED GAME? enter--> 1"
+      puts "(2)PLAY NEW GAME?   enter--> 2"
+      puts ''
+      puts '' 
+      
+      user_input = false
+      while user_input == false
+        load_or_save = gets.chomp
+
+        if load_or_save == '1'
+          user_input = true	
+          puts 'load'
+        elsif load_or_save == '2'
+          user_input = true
+          puts 'new'
+        else
+          puts "INVALID ENTRY: ENTER -->'1' or -->'2'" 	 
+        end 
+      end#end of LOAD OR SAVE
+
+
+
+   elsif user_response == 'n'
+   	  responses_valid = true
+      puts ''
+      puts ''
+      puts "OK WELL PLAY AGAIN NEXT TIME!"
+      puts "BYE :) !"
+      puts ''
+      puts ''
+    else
+ 	  puts "INVALID ENTRY: ENTER -->'y' or -->'n'"
+  	  puts "youve entered: #{user_response}"
+    end	
+   end#end of responce valid loop
+   		 	
+   # - - - - - - - - - - - - - - - - - -
+   ## --->IF YES :: 
+     # --> (1)LOAD SAVED GAME? enter 1
+     # --> (2)PLAY NEW GAME?   enter 2  
+
+    # - - - - - - - - - - - - - - - - - -
+     
+
+# - - - - - - - - - - - - - - - - - -
+
+
+# - - - - - - - - - - - - - - - - - -
+
+
+# - - - - - - - - - - - - - - - - - -
+
+
+
   
 
 
