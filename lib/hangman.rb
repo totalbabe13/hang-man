@@ -17,7 +17,6 @@
 # When the program first loads, add in an option that allows you to open one of your saved games,
 #  which should jump you exactly back to where you were when you saved. Play on!
 
-
 #   - - - - - - - - - - - - - - - - -
 # # - - - - - - - - - - - - - - - - -
 #BEHAVIOR AND METHODS
@@ -43,6 +42,12 @@ module Game_functions
     word_array.length.times { masked_word << "_"}
     masked_word
   end
+
+  def format_word_for_player(new_game.word_array)
+    guess_word = new_game.word_array[0].chomp
+    guess_word_array = guess_word.split('')
+    down_cased = guess_word_array.map {|letter| letter.downcase} 
+  end  
 
   def greet_player
     system "clear"
@@ -105,7 +110,7 @@ module Game_functions
       puts ''
       puts '         IF AT ANY TIME YOU WANT TO QUIT:: type in ---> - quit -'
       puts '         IF YOU WANT TO GUESS THE WORD::   type in ---> - guess -'
-      puts ''
+      puts '         TO SAVE YOUR GAME AT ANY TIME::   type in ---> - save - '
   end 
 
   def current_game_status(new_game,guess,message,secret_word)
@@ -151,52 +156,62 @@ end
   dictionary = []
   list_of_words = "wordlist.txt"
 # - - - - - - - - - - - - - - - - -
+
 #RUNNER SCRIPT
  include Game_functions
- greet_player
+ greet_player#USER MESSAGE
+
+
+
 
 #SAVE or LOAD game?
  response = gets.chomp
  if response == 'y'
-   save_or_load
+   save_or_load#USER MESSAGE
    user_response = gets.chomp
     
     if user_response == '1'
-      get_user_name
+      get_user_name#USER MESSAGE
       new_player = gets.chomp
       new_game = Hangman.new(new_player)
+
+
    #Find word from text file/ format it for game play
       load_dictionary(list_of_words,dictionary)
       new_game.random_words << pick_a_word(dictionary)
-      guess_word = new_game.random_words[0].chomp
-      guess_word_array = guess_word.split('')
-      down_cased = guess_word_array.map {|letter| letter.downcase} 
+      format_word_for_player(new_game.random_words)
    
-   #make new gameboard attribute
+   #Make new gameboard attribute
       new_game.game_board << make_guessing_board(guess_word)
       secret_word = new_game.game_board.flatten
-      select_a_letter
+      select_a_letter#USER MESSAGE
       message = '' #info for user Message Toggle 
 
     #game WHILE loop:  
       while secret_word != down_cased
    	    guess = gets.chomp
+
+        #If you'd already guessed a letter:
    	    if new_game.letters_guessed.include?(guess)
           puts '         YOU\'VE GUESSED THAT LETTER ALREADY--> TRY AGAIN:'
           guess = gets.chomp
         end  
-        
+  
+        #If you guessed a NEW letter:
         if !new_game.letters_guessed.include?(guess)
-          counter = 0 
+          counter = 0
+        #CHECK to see if GUESS matches any characters in secret word:
           while counter < down_cased.length
             if down_cased[counter] == guess
-             secret_word[counter] = guess
+        #FIND the INDEX of the matched Charcter and replace it:      
+             secret_word[counter] = guess 
             end 
             counter += 1 
-          end
+          end  
         end  
+      #store guessed letters and number of guesses:  
       new_game.letters_guessed << guess
-      new_game.guesses += 1
+      # new_game.guesses += 1
       system "clear"
         
         if secret_word.include?(guess)
@@ -204,29 +219,19 @@ end
         else
      	    message = "THERE IS NO ->#{guess.upcase} IN THIS WORD, TRY ANOTHER LETTER."
         end	
+      #update PLAYER on the STATUS of thier current GAME:  
       current_game_status(new_game,guess,message,secret_word) 	
-      # puts ''
-      # puts ''
-      # puts ''
-      # puts ''
-      # puts ''
-      # puts "           #{new_game.player_name} GUESSED THE LETTER --> #{guess.upcase} "
-      # puts "           #{message}"
-      # puts ''
-      # puts ''
-      # puts "           YOUR WORD: #{secret_word}"
-      # puts ''
-      # puts "           NUMBER OF GUESSES: #{new_game.guesses}"
-      # puts ''
-      # puts "           LETTERS GUESSED SO FAR: #{new_game.letters_guessed}"
-      # puts ''
-      # puts ''
-      # puts ''
-     
-    end #CLOSES WHILE LOOP
+    end #CLOSES GAME WHILE LOOP
+
+   # - - - - - - - - -
+   #IF the PLAYER SOLVES the word:
+
     answer = secret_word.join.upcase
     puts "           YOU GUESSED IT in #{new_game.guesses} guesses! The secret word was #{answer}"
-    puts 
+    puts '            WOULD YOU LIKE TO PLAY AGAIN??'
+
+
+
   end #closes new game IF statement path of NEW GAME
    # - - - - - - - - - -
  else

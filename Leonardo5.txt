@@ -1,0 +1,6 @@
+---
+:player_name: Leonardo5
+:game_board: "[]"
+:guesses: '0'
+:letters_guessed: "[]"
+:secret_word: '["d", "i", "v", "i", "n", "g"]'
