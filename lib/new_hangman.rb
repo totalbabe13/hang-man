@@ -228,6 +228,7 @@ include Game_functions
             
             while current_game.secret_word != current_game.game_board 
               puts 'MAKE A GUESS'
+              puts ' ---' 
               guess = gets.chomp
             
                 while current_game.letters_guessed.include?(guess)
@@ -239,7 +240,7 @@ include Game_functions
             	  current_game.letters_guessed << guess               	   
                 end 
                 
-                while !current_game.secret_word.include?(guess)
+                if !current_game.secret_word.include?(guess)
                 	current_game.guesses += 1
                 	system('clear')
                 	puts "THERE IS NO ->#{guess.upcase} IN THIS WORD, TRY ANOTHER LETTER."
@@ -247,8 +248,12 @@ include Game_functions
                 	puts "YOUR WORD: #{current_game.game_board}"
                 	puts "LETTERS GUESSED SO FAR: #{current_game.letters_guessed}"
                 	puts "NUMBER OF STRIKES: #{current_game.guesses}"
-                	guess = gets.chomp
+                	puts ''
+                	puts 'MAKE A GUESS'
+                    puts ' ---' 
+                	# guess = gets.chomp
                 end	
+                
 
                 if current_game.secret_word.include?(guess)
                    counter = 0
