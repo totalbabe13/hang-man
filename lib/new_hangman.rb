@@ -134,6 +134,7 @@ include Game_functions
         load_or_save = gets.chomp
 
         if load_or_save == '1'
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -        	
         #LOAD GAME PATH	
           user_input = true	
           #what is your user name? scrpit
@@ -142,6 +143,7 @@ include Game_functions
             if current_game.game_board.length < 1
                current_game.game_board = make_guessing_board(current_game.secret_word.join)
             end
+            
              #PLAY LOADED GAME 
             system "clear"
             puts "YOU GAME HAS BEEN LOADED: #{current_game.player_name}" 
@@ -201,7 +203,7 @@ include Game_functions
           puts "YOU GUESSED IT WITH ONLY #{current_game.guesses} STRIKES! The secret word was #{current_game.secret_word.join}"
           puts 'WOULD YOU LIKE TO PLAY AGAIN??'
 
-
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         elsif load_or_save == '2'
           #NEW GAME PATH	
           user_input = true
@@ -217,6 +219,8 @@ include Game_functions
           current_game.game_board = make_guessing_board(new_word.join)
           # p current_game
             system('clear')
+            puts ''
+            puts ''
             puts 'A word had been selcted for you to guess:'
             puts ''
             puts ''
@@ -243,14 +247,14 @@ include Game_functions
                 if !current_game.secret_word.include?(guess)
                 	current_game.guesses += 1
                 	system('clear')
+                	puts "#{current_game.player_name} GUESSED THE LETTER --> #{guess.upcase} "
                 	puts "THERE IS NO ->#{guess.upcase} IN THIS WORD, TRY ANOTHER LETTER."
                 	puts ''
                 	puts "YOUR WORD: #{current_game.game_board}"
                 	puts "LETTERS GUESSED SO FAR: #{current_game.letters_guessed}"
                 	puts "NUMBER OF STRIKES: #{current_game.guesses}"
                 	puts ''
-                	puts 'MAKE A GUESS'
-                    puts ' ---' 
+              
                 	# guess = gets.chomp
                 end	
                 
@@ -275,7 +279,7 @@ include Game_functions
                  puts "LETTERS GUESSED SO FAR: #{current_game.letters_guessed}"  
                 end		
             end
-          puts "YOU GUESSED IT WITH ONLY #{current_game.guesses} STRIKES! The secret word was #{current_game.secret_word.join}"
+          puts "YOU GUESSED IT WITH ONLY #{current_game.guesses} STRIKES! The secret word was --> #{current_game.secret_word.join}"
           puts 'WOULD YOU LIKE TO PLAY AGAIN??'
 
 
