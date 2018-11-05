@@ -1,4 +1,7 @@
 require 'yaml'
+require_relative 'hangman_messages'
+
+
 #Module - Behaviors - - - - - - - - 
 module Game_functions
  def load_dictionary(word_file,dictionary)
@@ -106,13 +109,14 @@ include Game_functions
 # - - - - - - - - - - - - - - - - - -
   ## -->WELCOME TO HANG MAN
   # --> PLAY? (y/n)
-  system("clear")
-  puts ''
-  puts ''
-  puts "***!! W_E_L_C_O_M_E to H-A-N-G-M-A-N-  !!***"
-  puts "WOULD YOU LIKE TO PLAY? enter --->(y/n)"
-  puts ''
-  puts ''
+  welcome_to_hangman
+  # system("clear")
+  # puts ''
+  # puts ''
+  # puts "***!! W_E_L_C_O_M_E to H-A-N-G-M-A-N-  !!***"
+  # puts "WOULD YOU LIKE TO PLAY? enter --->(y/n)"
+  # puts ''
+  # puts ''
 
   
   responses_valid = false
