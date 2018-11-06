@@ -106,59 +106,31 @@ class Hangman
 
 #script - - - - - -- - - - - - - -
 include Game_functions
-# - - - - - - - - - - - - - - - - - -
-  ## -->WELCOME TO HANG MAN
-  # --> PLAY? (y/n)
-  welcome_to_hangman
-  # system("clear")
-  # puts ''
-  # puts ''
-  # puts "***!! W_E_L_C_O_M_E to H-A-N-G-M-A-N-  !!***"
-  # puts "WOULD YOU LIKE TO PLAY? enter --->(y/n)"
-  # puts ''
-  # puts ''
-
-  
+# - - - - - - - - - - - - - - - - -
+  welcome_to_hangman_message #MESSAGE INTERFACE
+ 
   responses_valid = false
   while  responses_valid == false
   	user_response = gets.chomp
-
     if user_response == 'y'
       responses_valid = true
-      system("clear")
-      puts ''
-      puts ''
-      puts "(1)LOAD SAVED GAME? enter--> 1"
-      puts "(2)PLAY NEW GAME?   enter--> 2"
-      puts ''
-      puts '' 
-      
+      load_or_new_message #MESSAGE INTERFACE
       user_input = false
+      
       while user_input == false 
         load_or_save = gets.chomp
-
-        if load_or_save == '1'
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -        	
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
         #LOAD GAME PATH	
+        if load_or_save == '1'
           user_input = true	
-          #what is your user name? scrpit
           loaded_game = load_saved_game 
           current_game = format_loaded_game_file(loaded_game)
             if current_game.game_board.length < 1
                current_game.game_board = make_guessing_board(current_game.secret_word.join)
             end
             
-             #PLAY LOADED GAME 
-            system "clear"
-            puts "YOU GAME HAS BEEN LOADED: #{current_game.player_name}" 
-            puts 'A word had been selcted for you to guess:'
-            puts ''
-            puts ''
-            puts "TYPE A LETTER IN, and THEN PRESS -->ENTER" 
-            puts ''
-            puts 'IF AT ANY TIME YOU WANT TO QUIT:: type in ---> - quit  -'
-            puts 'IF YOU WANT TO GUESS THE WORD::   type in ---> - guess -'
-            puts 'TO SAVE YOUR GAME AT ANY TIME::   type in ---> - save  -'
+             #PLAY LOADED GAME # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+             game_has_been_loaded_message(current_game) 
             
             while current_game.secret_word != current_game.game_board 
               puts 'MAKE A GUESS'
@@ -173,15 +145,9 @@ include Game_functions
             	  current_game.letters_guessed << guess               	   
                 end 
                 
-                while !current_game.secret_word.include?(guess)
+                if !current_game.secret_word.include?(guess)
                 	current_game.guesses += 1
-                	system('clear')
-                	puts "THERE IS NO ->#{guess.upcase} IN THIS WORD, TRY ANOTHER LETTER."
-                	puts ''
-                	puts "YOUR WORD: #{current_game.game_board}"
-                	puts "LETTERS GUESSED SO FAR: #{current_game.letters_guessed}"
-                	puts "NUMBER OF STRIKES: #{current_game.guesses}"
-                	guess = gets.chomp
+                	letter_not_in_word_message(guess,current_game)
                 end	
 
                 if current_game.secret_word.include?(guess)
@@ -192,48 +158,29 @@ include Game_functions
                         end
                        counter += 1
                     end
-                 system('clear')
-                 puts "#{current_game.player_name} GUESSED THE LETTER --> #{guess.upcase} "
-                 puts "THERS IS AN -> #{guess.upcase} IN THIS WORD!"
-                 puts ''
-                 puts ''
-                 puts "YOUR WORD: #{current_game.game_board}"
-                 puts ''
-                 puts "NUMBER OF STRIKES: #{current_game.guesses}"
-                 puts ''
-                 puts "LETTERS GUESSED SO FAR: #{current_game.letters_guessed}"  
+                   correct_letter_guessed_message(current_game,guess)  
                 end		
             end
-          puts "YOU GUESSED IT WITH ONLY #{current_game.guesses} STRIKES! The secret word was #{current_game.secret_word.join}"
-          puts 'WOULD YOU LIKE TO PLAY AGAIN??'
+            play_again_message(current_game)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         elsif load_or_save == '2'
-          #NEW GAME PATH	
+        #NEW GAME PATH	
           user_input = true
           dictionary = []
-          # puts 'new'
+ 
           system('clear')
           puts ''
           puts 'ENTER YOUR PLAYER NAME:'
           name = gets.chomp
+
           list_of_words = "wordlist.txt"
           new_word = format_word_for_player(pick_a_word(load_dictionary(list_of_words,dictionary)))
           current_game = Hangman.new(name,new_word)
           current_game.game_board = make_guessing_board(new_word.join)
-          # p current_game
-            system('clear')
-            puts ''
-            puts ''
-            puts 'A word had been selcted for you to guess:'
-            puts ''
-            puts ''
-            puts "TYPE A LETTER IN, and THEN PRESS -->ENTER" 
-            puts ''
-            puts 'IF AT ANY TIME YOU WANT TO QUIT:: type in ---> - quit  -'
-            puts 'IF YOU WANT TO GUESS THE WORD::   type in ---> - guess -'
-            puts 'TO SAVE YOUR GAME AT ANY TIME::   type in ---> - save  -'
-            
+          new_game_message
+          
+           #PLAY NEW GAME # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
             while current_game.secret_word != current_game.game_board 
               puts 'MAKE A GUESS'
               puts ' ---' 
@@ -250,16 +197,7 @@ include Game_functions
                 
                 if !current_game.secret_word.include?(guess)
                 	current_game.guesses += 1
-                	system('clear')
-                	puts "#{current_game.player_name} GUESSED THE LETTER --> #{guess.upcase} "
-                	puts "THERE IS NO ->#{guess.upcase} IN THIS WORD, TRY ANOTHER LETTER."
-                	puts ''
-                	puts "YOUR WORD: #{current_game.game_board}"
-                	puts "LETTERS GUESSED SO FAR: #{current_game.letters_guessed}"
-                	puts "NUMBER OF STRIKES: #{current_game.guesses}"
-                	puts ''
-              
-                	# guess = gets.chomp
+                	letter_not_in_word_message(guess,current_game)
                 end	
                 
 
@@ -271,20 +209,12 @@ include Game_functions
                         end
                        counter += 1
                     end
-                 system('clear')
-                 puts "#{current_game.player_name} GUESSED THE LETTER --> #{guess.upcase} "
-                 puts "THERS IS AN -> #{guess.upcase} IN THIS WORD!"
-                 puts ''
-                 puts ''
-                 puts "YOUR WORD: #{current_game.game_board}"
-                 puts ''
-                 puts "NUMBER OF STRIKES: #{current_game.guesses}"
-                 puts ''
-                 puts "LETTERS GUESSED SO FAR: #{current_game.letters_guessed}"  
-                end		
+                  correct_letter_guessed_message(current_game,guess)   
+                end	
+
             end
-          puts "YOU GUESSED IT WITH ONLY #{current_game.guesses} STRIKES! The secret word was --> #{current_game.secret_word.join}"
-          puts 'WOULD YOU LIKE TO PLAY AGAIN??'
+            play_again_message(current_game)
+          
 
 
         else
@@ -298,7 +228,7 @@ include Game_functions
    	  responses_valid = true
       puts ''
       puts ''
-      puts "OK WELL PLAY AGAIN NEXT TIME!"
+      puts "OK WE'LL PLAY NEXT TIME!"
       puts "BYE :) !"
       puts ''
       puts ''
