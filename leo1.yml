@@ -1,0 +1,107 @@
+--- !ruby/object:Hangman
+player_name: leo1
+game_board: []
+guesses: 0
+letters_guessed: []
+secret_word:
+- h
+- e
+- m
+- o
+- r
+- r
+- h
+- a
+- g
+- e
+--- !ruby/object:Hangman
+player_name: leo1
+game_board:
+- e
+- a
+- t
+- a
+- b
+- l
+- e
+guesses: 4
+letters_guessed:
+- a
+- e
+- i
+- o
+- u
+- s
+- t
+- b
+- l
+secret_word:
+- e
+- a
+- t
+- a
+- b
+- l
+- e
+--- !ruby/object:Hangman
+player_name: leo1
+game_board:
+- c
+- o
+- m
+- m
+- i
+- e
+guesses: 6
+letters_guessed:
+- a
+- e
+- i
+- o
+- u
+- s
+- t
+- c
+- r
+- l
+- m
+secret_word:
+- c
+- o
+- m
+- m
+- i
+- e
+--- !ruby/object:Hangman
+player_name: leo1
+game_board:
+- h
+- e
+- m
+- o
+- r
+- r
+- h
+- a
+- g
+- e
+guesses: 0
+letters_guessed:
+- a
+- h
+- e
+- m
+- o
+- r
+- g
+secret_word:
+- h
+- e
+- m
+- o
+- r
+- r
+- h
+- a
+- g
+- e

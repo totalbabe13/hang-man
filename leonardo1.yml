@@ -1,0 +1,16 @@
+--- !ruby/object:Hangman
+player_name: leonardo1
+game_board: []
+guesses: 0
+letters_guessed: []
+secret_word:
+- h
+- e
+- m
+- o
+- r
+- r
+- h
+- a
+- g
+- e

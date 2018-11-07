@@ -32,19 +32,25 @@ module Game_functions
  def format_game_for_saving(game)
    # game_name = "#{game.player_name}"
    current_game = {
-   	:player_name => "#{game.player_name}",
-   	game_board: "#{game.game_board}",
-   	guesses: "#{game.guesses}",
-   	letters_guessed: "#{game.letters_guessed}",
-   	secret_word: "#{game.secret_word}"
+   	player_name: game.player_name,
+   	game_board: game.game_board,
+   	guesses: game.guesses,
+   	letters_guessed: game.letters_guessed,
+   	secret_word: game.secret_word
    }
  end	
 
- def save_game(game_obj,game_hash)
+ def save_game(game)
   Dir.mkdir("saved_games") unless Dir.exists?("saved_games")
-  filename = "#{game_obj.player_name}.yml"
+  filename = "#{game.player_name}.yml"
+  if !File.exists?(filename)
    File.open(filename,'w') do |file|
-      file.puts YAML.dump(game_hash) 
+      file.puts YAML.dump(game)
+     end
+   elsif File.exists?(filename)
+   	  File.open(filename,'a') do |file|
+      file.puts YAML.dump(game)
+     end 	    
    end 
  end
 
@@ -58,15 +64,6 @@ module Game_functions
     if File.exist?("#{get_file}.yml")
       puts 'WE FOUND YOUR GAME:'
       saved_game = YAML.load_file("#{get_file}.yml")
-      loaded_game = {
-      	:player_name => saved_game[:player_name],
-      	:game_board => saved_game[:game_board],
-      	:guesses => saved_game[:guesses],
-      	:letters_guessed => saved_game[:letters_guessed],
-      	:secret_word => saved_game[:secret_word]
-      }
-      loaded_game
-      p saved_game
     else
       puts'GAME NOT FOUND'
     end  	
@@ -80,7 +77,6 @@ module Game_functions
    loaded_game.letters_guessed = game_file[:letters_guessed]
    # puts "YOU GAME HAS BEEN LOADED: #{loaded_game.player_name}"
    loaded_game
-  
  end
 
 end 
@@ -107,7 +103,10 @@ class Hangman
 include Game_functions
 # - - - - - - - - - - - - - - - - -
   welcome_to_hangman_message #MESSAGE INTERFACE
- 
+  
+  quit_game = false
+  start_new_game = false
+
   responses_valid = false
   while  responses_valid == false
   	user_response = gets.chomp
@@ -117,23 +116,43 @@ include Game_functions
       user_input = false
       
       while user_input == false 
-        load_or_save = gets.chomp
+        load_or_new = gets.chomp
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
         #LOAD GAME PATH	
-        if load_or_save == '1'
+        if load_or_new == '1'
           user_input = true	
-          loaded_game = load_saved_game 
-          current_game = format_loaded_game_file(loaded_game)
-            if current_game.game_board.length < 1
-               current_game.game_board = make_guessing_board(current_game.secret_word.join)
-            end
+          current_game = load_saved_game 
+          current_game.game_board = make_guessing_board(current_game.secret_word.join)
+          
              #PLAY LOADED GAME # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
           game_has_been_loaded_message(current_game) 
-          run_game(current_game)
-          play_again_message(current_game)
+          
+          while quit_game == false
+            run_game(current_game)
+            play_again_message(current_game)
+            user_quit_response = gets.chomp
+
+            if user_quit_response == 'y'
+            	save_game(current_game)
+            	quit_game = false
+            	list_of_words = "wordlist.txt"
+                new_word = format_word_for_player(pick_a_word(load_dictionary(list_of_words,dictionary)))
+                system('clear')
+                puts ''
+                puts 'ENTER YOUR PLAYER NAME:'
+                name = gets.chomp
+                current_game = Hangman.new(name,new_word)
+                current_game.game_board = make_guessing_board(new_word.join)
+                new_game_message
+            elsif user_quit_response == 'n'
+            	save_game(current_game)
+            	quit_game = true
+            end	
+            			
+          end  
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        elsif load_or_save == '2'
+        elsif load_or_new == '2'
         #NEW GAME PATH	
           user_input = true
           dictionary = []
@@ -148,10 +167,29 @@ include Game_functions
           current_game = Hangman.new(name,new_word)
           current_game.game_board = make_guessing_board(new_word.join)
           new_game_message
-           #PLAY NEW GAME # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
-          run_game(current_game)
-          play_again_message(current_game)
-          
+        #PLAY NEW GAME # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
+            while quit_game == false
+              run_game(current_game)
+              play_again_message(current_game)
+              user_quit_response = gets.chomp
+
+               if user_quit_response == 'y'
+            	  save_game(current_game)
+            	    quit_game = false
+            	    list_of_words = "wordlist.txt"
+                    new_word = format_word_for_player(pick_a_word(load_dictionary(list_of_words,dictionary)))
+                    system('clear')
+                    puts ''
+                    puts 'ENTER YOUR PLAYER NAME:'
+                    name = gets.chomp
+                    current_game = Hangman.new(name,new_word)
+                    current_game.game_board = make_guessing_board(new_word.join)
+                    new_game_message
+                elsif user_quit_response == 'n'
+            	    save_game(current_game)
+            	    quit_game = true
+                end	
+            end
         else
           puts "INVALID ENTRY: ENTER -->'1' or -->'2'" 	 
         end 
