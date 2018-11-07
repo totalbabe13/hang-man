@@ -84,3 +84,38 @@ def play_again_message(current_game)
   puts "YOU GUESSED IT WITH ONLY #{current_game.guesses} STRIKES! The secret word was --> #{current_game.secret_word.join.upcase}"
   puts 'WOULD YOU LIKE TO PLAY AGAIN??'
 end  
+
+def run_game(current_game)
+  while current_game.secret_word != current_game.game_board 
+              puts ' MAKE A GUESS'
+              puts ' ---' 
+              guess = gets.chomp
+            
+                while current_game.letters_guessed.include?(guess)
+                  puts '         YOU\'VE GUESSED THAT LETTER ALREADY--> TRY AGAIN:'
+                  guess = gets.chomp
+                end   
+                 	
+                if !current_game.letters_guessed.include?(guess)
+            	  current_game.letters_guessed << guess               	   
+                end 
+                
+                if !current_game.secret_word.include?(guess)
+                	current_game.guesses += 1
+                	letter_not_in_word_message(guess,current_game)
+                end	
+                
+
+                if current_game.secret_word.include?(guess)
+                   counter = 0
+                   while counter < current_game.secret_word.length
+                        if current_game.secret_word[counter]== guess
+                   	      current_game.game_board[counter] = guess 
+                        end
+                       counter += 1
+                    end
+                  correct_letter_guessed_message(current_game,guess)   
+                end	
+
+            end
+end	

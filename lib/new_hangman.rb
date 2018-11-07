@@ -103,7 +103,6 @@ class Hangman
   end  
  end #end of class HANGMAN 
 
-
 #script - - - - - -- - - - - - - -
 include Game_functions
 # - - - - - - - - - - - - - - - - -
@@ -128,40 +127,10 @@ include Game_functions
             if current_game.game_board.length < 1
                current_game.game_board = make_guessing_board(current_game.secret_word.join)
             end
-            
              #PLAY LOADED GAME # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-             game_has_been_loaded_message(current_game) 
-            
-            while current_game.secret_word != current_game.game_board 
-              puts 'MAKE A GUESS'
-              guess = gets.chomp
-            
-                while current_game.letters_guessed.include?(guess)
-                  puts '         YOU\'VE GUESSED THAT LETTER ALREADY--> TRY AGAIN:'
-                  guess = gets.chomp
-                end   
-                 	
-                if !current_game.letters_guessed.include?(guess)
-            	  current_game.letters_guessed << guess               	   
-                end 
-                
-                if !current_game.secret_word.include?(guess)
-                	current_game.guesses += 1
-                	letter_not_in_word_message(guess,current_game)
-                end	
-
-                if current_game.secret_word.include?(guess)
-                   counter = 0
-                   while counter < current_game.secret_word.length
-                        if current_game.secret_word[counter]== guess
-                   	      current_game.game_board[counter] = guess 
-                        end
-                       counter += 1
-                    end
-                   correct_letter_guessed_message(current_game,guess)  
-                end		
-            end
-            play_again_message(current_game)
+          game_has_been_loaded_message(current_game) 
+          run_game(current_game)
+          play_again_message(current_game)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         elsif load_or_save == '2'
@@ -179,50 +148,14 @@ include Game_functions
           current_game = Hangman.new(name,new_word)
           current_game.game_board = make_guessing_board(new_word.join)
           new_game_message
-          
            #PLAY NEW GAME # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -   
-            while current_game.secret_word != current_game.game_board 
-              puts 'MAKE A GUESS'
-              puts ' ---' 
-              guess = gets.chomp
-            
-                while current_game.letters_guessed.include?(guess)
-                  puts '         YOU\'VE GUESSED THAT LETTER ALREADY--> TRY AGAIN:'
-                  guess = gets.chomp
-                end   
-                 	
-                if !current_game.letters_guessed.include?(guess)
-            	  current_game.letters_guessed << guess               	   
-                end 
-                
-                if !current_game.secret_word.include?(guess)
-                	current_game.guesses += 1
-                	letter_not_in_word_message(guess,current_game)
-                end	
-                
-
-                if current_game.secret_word.include?(guess)
-                   counter = 0
-                   while counter < current_game.secret_word.length
-                        if current_game.secret_word[counter]== guess
-                   	      current_game.game_board[counter] = guess 
-                        end
-                       counter += 1
-                    end
-                  correct_letter_guessed_message(current_game,guess)   
-                end	
-
-            end
-            play_again_message(current_game)
+          run_game(current_game)
+          play_again_message(current_game)
           
-
-
         else
           puts "INVALID ENTRY: ENTER -->'1' or -->'2'" 	 
         end 
       end#end of LOAD OR SAVE
-
-
 
     elsif user_response == 'n'
    	  responses_valid = true
